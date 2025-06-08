@@ -9,8 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -18,19 +16,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.web_study.lecture.entity.Lecture;
-import com.example.web_study.lecture.entity.LectureApplicantCount;
 import com.example.web_study.lecture.entity.LectureApplication;
 import com.example.web_study.lecture.fixture.ApplyRequestFixture;
 import com.example.web_study.lecture.fixture.LectureCreateFixture;
-import com.example.web_study.lecture.repository.LectureApplicantCountRepository;
 import com.example.web_study.lecture.repository.LectureApplicationRepository;
 import com.example.web_study.lecture.repository.LectureRepository;
 import com.example.web_study.lecture.service.dto.LectureDto;
 import com.example.web_study.user.entity.User;
 import com.example.web_study.user.entity.UserType;
 import com.example.web_study.user.repository.UserRepository;
-
-import jakarta.persistence.EntityManager;
 
 @SpringBootTest
 @Transactional
@@ -40,7 +34,6 @@ class LectureServiceTest {
 	@Autowired private LectureRepository lectureRepository;
 	@Autowired private UserRepository userRepository;
 	@Autowired private LectureApplicationRepository lectureApplicationRepository;
-	@Autowired private LectureApplicantCountRepository lectureApplicantCountRepository;
 
 
 	@Nested
@@ -172,7 +165,6 @@ class LectureServiceTest {
 		private Lecture saveLectureWith(User instructor, String title, int maxStudent, int price) {
 			Lecture lecture = new Lecture(title, maxStudent, BigDecimal.valueOf(price), instructor.getId());
 			lectureRepository.save(lecture);
-			lectureApplicantCountRepository.save(new LectureApplicantCount(lecture));
 			return lecture;
 		}
 
@@ -188,8 +180,7 @@ class LectureServiceTest {
 				);
 				userRepository.save(student);
 				lectureApplicationRepository.save(new LectureApplication(lecture, student.getId()));
-				LectureApplicantCount lac = lectureApplicantCountRepository.findById(lecture.getId()).orElseThrow();
-				lac.increase();
+				lecture.increaseApplicantCount();
 			}
 		}
 	}
