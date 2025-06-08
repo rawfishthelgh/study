@@ -27,6 +27,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("com.googlecode.libphonenumber:libphonenumber:8.13.21")
+	implementation("org.springframework.security:spring-security-crypto")
+	implementation("org.bouncycastle:bcprov-jdk15to18:1.70")
 	annotationProcessor ("jakarta.annotation:jakarta.annotation-api")
 	annotationProcessor ("jakarta.persistence:jakarta.persistence-api")
 
