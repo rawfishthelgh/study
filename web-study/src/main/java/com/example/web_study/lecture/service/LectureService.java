@@ -62,7 +62,7 @@ public class LectureService {
 
 	private void validatePrice(int price) {
 		if (price < 0) {
-			throw new IllegalArgumentException("가격은 0보다 커야 합니다.");
+			throw new IllegalArgumentException("가격은 0보다 작을 수 없습니다.");
 		}
 	}
 
@@ -101,5 +101,9 @@ public class LectureService {
 		if (count.getApplicantCount()>= lecture.getMaxStudent()) {
 			throw new IllegalStateException("최대 수강 인원을 초과하여 신청할 수 없습니다.");
 		}
+	}
+
+	public Page<LectureDto.Response> getLectures(String sort, Pageable pageable) {
+		return lectureRepository.findAllBySort(LectureSortType.from(sort), pageable);
 	}
 }

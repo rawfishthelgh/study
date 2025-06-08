@@ -77,12 +77,12 @@ class LectureServiceTest {
 		}
 
 		@Test
-		void 가격이_0이면_예외() {
+		void 가격이_0미만이면_예외() {
 			User instructor = savedInstructor();
-			LectureDto.Create request = LectureCreateFixture.with("자바", 10, 0);
+			LectureDto.Create request = LectureCreateFixture.with("자바", 10, -10);
 			assertThatThrownBy(() -> lectureService.createLecture(request, instructor))
 				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessageContaining("가격은 0보다 커야");
+				.hasMessageContaining("가격은 0보다 작을 수 없습니다");
 		}
 
 		@Test
@@ -137,6 +137,60 @@ class LectureServiceTest {
 			assertThatThrownBy(() -> lectureService.applyLectures(ApplyRequestFixture.withIds(List.of(lecture.getId())), student2))
 				.isInstanceOf(IllegalStateException.class)
 				.hasMessageContaining("최대 수강 인원을 초과하여 신청할 수 없습니다");
+		}
+	}
+
+	@Nested
+	@DisplayName("LectureSortType 기준으로 정렬된 강의 목록 조회")
+	class GetLecturesSortedTest {
+		@BeforeEach
+		void setUp() {
+			User instructor = saveInstructor();
+			Lecture a = saveLectureWith(instructor, "A", 10, 10000); applyStudents(a, 1);
+			Lecture b = saveLectureWith(instructor, "B", 10, 10000); applyStudents(b, 5);
+			Lecture c = saveLectureWith(instructor, "C", 5, 10000); applyStudents(c, 4);
+		}
+
+		@Test
+		void 최신순으로_조회된다() {
+			Page<LectureDto.Response> lectures = lectureService.getLectures("recent", PageRequest.of(0,10));
+			assertThat(lectures).extracting(LectureDto.Response::getTitle).containsExactly("C", "B", "A");
+		}
+
+		@Test
+		void 신청자_많은_순으로_조회된다() {
+			Page<LectureDto.Response> lectures = lectureService.getLectures("popular", PageRequest.of(0,10));
+			assertThat(lectures).extracting(LectureDto.Response::getTitle).containsExactly("B", "C", "A");
+		}
+
+		@Test
+		void 신청률_높은_순으로_조회된다() {
+			Page<LectureDto.Response> lectures = lectureService.getLectures("rate", PageRequest.of(0,10));
+			assertThat(lectures).extracting(LectureDto.Response::getTitle).containsExactly("C", "B", "A");
+		}
+
+		private Lecture saveLectureWith(User instructor, String title, int maxStudent, int price) {
+			Lecture lecture = new Lecture(title, maxStudent, BigDecimal.valueOf(price), instructor.getId());
+			lectureRepository.save(lecture);
+			lectureApplicantCountRepository.save(new LectureApplicantCount(lecture));
+			return lecture;
+		}
+
+		private void applyStudents(Lecture lecture, int count) {
+			for (int i = 0; i < count; i++) {
+				String uniquePhone = "010" + lecture.getId() + String.format("%04d", i); // 강의 ID로 prefix
+				User student = new User(
+					"학생" + lecture.getTitle() + i,
+					"s" + i + lecture.getTitle() + "@test.com",
+					uniquePhone,
+					"pwd",
+					UserType.STUDENT
+				);
+				userRepository.save(student);
+				lectureApplicationRepository.save(new LectureApplication(lecture, student.getId()));
+				LectureApplicantCount lac = lectureApplicantCountRepository.findById(lecture.getId()).orElseThrow();
+				lac.increase();
+			}
 		}
 	}
 

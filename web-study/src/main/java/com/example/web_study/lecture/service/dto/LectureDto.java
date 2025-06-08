@@ -43,4 +43,16 @@ public class LectureDto {
 		private List<Long> lectureIds;
 
 	}
+
+	@Getter
+	@AllArgsConstructor
+	public static class Response {
+		private Long id;
+		private String title;
+		private BigDecimal price;
+		private String instructorName;
+		private int applicantCount;
+		private int maxStudent;
+	}
+
 }

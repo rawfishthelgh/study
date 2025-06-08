@@ -45,5 +45,14 @@ public class LectureController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping
+	public ResponseEntity<Page<LectureDto.Response>> getLectures(
+		@RequestParam(defaultValue = "recent") String sort,
+		@PageableDefault(size = 20) Pageable pageable
+	) {
+		Page<LectureDto.Response> response = lectureService.getLectures(sort, pageable);
+		return ResponseEntity.ok(response);
+	}
+
 
 }
