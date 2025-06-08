@@ -36,4 +36,14 @@ public class LectureController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	@PostMapping("/apply")
+	public ResponseEntity<Void> applyLectures(
+		@RequestBody @Valid LectureDto.ApplyRequest request,
+		@CurrentUser User user
+	) {
+		lectureService.applyLectures(request, user);
+		return ResponseEntity.ok().build();
+	}
+
+
 }

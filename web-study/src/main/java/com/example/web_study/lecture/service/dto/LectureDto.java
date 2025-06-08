@@ -34,4 +34,13 @@ public class LectureDto {
 		}
 
 	}
+
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ApplyRequest {
+
+		private List<Long> lectureIds;
+
+	}
 }
