@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.web_study.lecture.entity.Lecture;
-import com.example.web_study.lecture.entity.LectureApplicantCount;
 import com.example.web_study.lecture.entity.LectureApplication;
-import com.example.web_study.lecture.repository.LectureApplicantCountRepository;
 import com.example.web_study.lecture.repository.LectureApplicationRepository;
 import com.example.web_study.lecture.repository.LectureRepository;
 import com.example.web_study.lecture.service.dto.LectureDto;
@@ -29,7 +27,6 @@ public class LectureService {
 
 	private final LectureRepository lectureRepository;
 	private final LectureApplicationRepository lectureApplicationRepository;
-	private final LectureApplicantCountRepository lectureApplicantCountRepository;
 
 	@Transactional
 	public void createLecture(LectureDto.Create request, User user) {
@@ -37,10 +34,8 @@ public class LectureService {
 		validateTitle(request.getTitle());
 		validateMaxStudent(request.getMaxStudent());
 		validatePrice(request.getPrice());
-
 		Lecture lecture = request.toEntity(user);
 		lectureRepository.save(lecture);
-		lectureApplicantCountRepository.save(new LectureApplicantCount(lecture));
 	}
 
 	private void validateInstructor(User user) {
@@ -79,20 +74,16 @@ public class LectureService {
 	}
 
 	private void applyLecture(Long lectureId, User user) {
-		Lecture lecture = lectureRepository.findById(lectureId)
+		Lecture lecture = lectureRepository.findWithPessimisticLockById(lectureId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강의입니다."));
 
-		LectureApplicantCount count = lectureApplicantCountRepository
-			.findWithPessimisticLockByLectureId(lectureId)
-			.orElseThrow(() -> new IllegalStateException("신청자 수 정보가 없습니다."));
-
-		validateOverMaxStudents(count, lecture);
+		validateOverMaxStudents(lecture);
 		validateAlreadyApplied(user, lecture);
 
 		LectureApplication application = new LectureApplication(lecture, user.getId());
 		lectureApplicationRepository.save(application);
 
-		count.increase();
+		lecture.increaseApplicantCount();
 	}
 
 	private void validateAlreadyApplied(User user, Lecture lecture) {
@@ -102,8 +93,8 @@ public class LectureService {
 		}
 	}
 
-	private void validateOverMaxStudents(LectureApplicantCount count, Lecture lecture) {
-		if (count.getApplicantCount()>= lecture.getMaxStudent()) {
+	private void validateOverMaxStudents(Lecture lecture) {
+		if (lecture.getApplicantCount()>= lecture.getMaxStudent()) {
 			throw new IllegalStateException("최대 수강 인원을 초과하여 신청할 수 없습니다.");
 		}
 	}
