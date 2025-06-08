@@ -1,5 +1,7 @@
 package com.example.web_study.lecture.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,6 @@ import com.example.web_study.lecture.service.dto.LectureSortType;
 import com.example.web_study.user.entity.User;
 import com.example.web_study.user.entity.UserType;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,7 +69,11 @@ public class LectureService {
 
 	@Transactional
 	public void applyLectures(LectureDto.ApplyRequest request, User user) {
-		for (Long lectureId : request.getLectureIds()) {
+		List<Long> sortedLectureIds = request.getLectureIds().stream()
+			.sorted()
+			.toList();
+
+		for (Long lectureId : sortedLectureIds) {
 			applyLecture(lectureId, user);
 		}
 	}
@@ -97,7 +102,7 @@ public class LectureService {
 		}
 	}
 
-	private static void validateOverMaxStudents(LectureApplicantCount count, Lecture lecture) {
+	private void validateOverMaxStudents(LectureApplicantCount count, Lecture lecture) {
 		if (count.getApplicantCount()>= lecture.getMaxStudent()) {
 			throw new IllegalStateException("최대 수강 인원을 초과하여 신청할 수 없습니다.");
 		}
