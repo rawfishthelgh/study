@@ -1,6 +1,10 @@
 phone:
   country: KR
 
+jwt:
+  secret-key: MLIt3kWFcIhNyEHoqg3YhOnR17sFMsejSO1rG2dKtz0ciaigS7axiIKSKW0boedjmELen/ImSDPLNUShCEs4Kw==
+  expiration-millis: 7200000 # 2시간
+
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
