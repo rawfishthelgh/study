@@ -33,8 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 		String uri = request.getRequestURI();
 
-		// 인증이 필요 없는 경로들
-		if (uri.equals("/api/users/register") || uri.equals("/api/auth/login")) {
+		if (uri.equals("/api/users") || uri.equals("/api/auth/login")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
