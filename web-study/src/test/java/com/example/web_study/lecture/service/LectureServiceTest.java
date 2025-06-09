@@ -3,6 +3,7 @@ package com.example.web_study.lecture.service;
 import static org.assertj.core.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,11 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.web_study.lecture.entity.Lecture;
 import com.example.web_study.lecture.entity.LectureApplication;
+import com.example.web_study.lecture.entity.LecturePayment;
 import com.example.web_study.lecture.fixture.ApplyRequestFixture;
 import com.example.web_study.lecture.fixture.LectureCreateFixture;
 import com.example.web_study.lecture.repository.LectureApplicationRepository;
+import com.example.web_study.lecture.repository.LecturePaymentRepository;
 import com.example.web_study.lecture.repository.LectureRepository;
 import com.example.web_study.lecture.service.dto.LectureDto;
+import com.example.web_study.lecture.service.dto.TopInstructorDto;
 import com.example.web_study.user.entity.User;
 import com.example.web_study.user.entity.UserType;
 import com.example.web_study.user.repository.UserRepository;
@@ -34,10 +38,11 @@ class LectureServiceTest {
 	@Autowired private LectureRepository lectureRepository;
 	@Autowired private UserRepository userRepository;
 	@Autowired private LectureApplicationRepository lectureApplicationRepository;
+	@Autowired private LecturePaymentRepository lecturePaymentRepository;
 
 
 	@Nested
-	@DisplayName("Lecture Create Test")
+	@DisplayName("강의 생성")
 	class LectureCreateTest {
 		@Test
 		void 강의등록_성공() {
@@ -89,7 +94,7 @@ class LectureServiceTest {
 	}
 
 	@Nested
-	@DisplayName("Lecture Apply Test")
+	@DisplayName("강의 신청")
 	class LectureApplyTest {
 		@Test
 		void 여러_강의_동시_신청_성공() {
@@ -184,6 +189,73 @@ class LectureServiceTest {
 			}
 		}
 	}
+
+	@Nested
+	@DisplayName("강사 수익 TOP 10 조회")
+	class GetTopRevenueInstructorsTest {
+
+		private static int phoneSeed = 10000000;
+		private static int emailSeed = 1;
+
+		@BeforeEach
+		void setUp() {
+			User instructor1 = userRepository.save(new User("강사1", generateEmail(), generatePhoneNumber(), "pwd", UserType.INSTRUCTOR));
+			User instructor2 = userRepository.save(new User("강사2", generateEmail(), generatePhoneNumber(), "pwd", UserType.INSTRUCTOR));
+			User instructor3 = userRepository.save(new User("강사3", generateEmail(), generatePhoneNumber(), "pwd", UserType.INSTRUCTOR));
+
+			Lecture lecture1 = new Lecture("강의1", 10, BigDecimal.valueOf(10000), instructor1.getId());
+			Lecture lecture2 = new Lecture("강의2", 10, BigDecimal.valueOf(20000), instructor2.getId());
+			Lecture lecture3 = new Lecture("강의3", 10, BigDecimal.valueOf(30000), instructor3.getId());
+
+			lectureRepository.saveAll(List.of(lecture1, lecture2, lecture3));
+
+			savePayments(lecture1, 3);
+			savePayments(lecture2, 5);
+			savePayments(lecture3, 2);
+		}
+
+		@Test
+		void 수익_상위_10명의_강사_조회() {
+			List<TopInstructorDto> top10 = lectureService.getTop10RevenueInstructors();
+			assertThat(top10).hasSize(3);
+
+			assertThat(top10.get(0).getInstructorName()).isEqualTo("강사2");
+			assertThat(top10.get(0).getTotalRevenue()).isEqualByComparingTo("100000.00");
+
+			assertThat(top10.get(1).getInstructorName()).isEqualTo("강사3");
+			assertThat(top10.get(1).getTotalRevenue()).isEqualByComparingTo("60000.00");
+
+			assertThat(top10.get(2).getInstructorName()).isEqualTo("강사1");
+			assertThat(top10.get(2).getTotalRevenue()).isEqualByComparingTo("30000.00");
+		}
+
+		private void savePayments(Lecture lecture, int count) {
+			for (int i = 0; i < count; i++) {
+				String phone = generatePhoneNumber();
+				String email = generateEmail();
+
+				User student = userRepository.save(
+					new User("학생" + i, email, phone, "pwd", UserType.STUDENT)
+				);
+
+				lectureApplicationRepository.save(new LectureApplication(lecture, student.getId()));
+				lecture.increaseApplicantCount();
+
+				LecturePayment payment = new LecturePayment(lecture.getId(), student.getId(), lecture.getPrice(), LocalDateTime.now());
+				lecturePaymentRepository.save(payment);
+			}
+		}
+
+		private String generatePhoneNumber() {
+			return "010" + String.format("%08d", phoneSeed++);
+		}
+
+		private String generateEmail() {
+			return "user" + (emailSeed++) + "@test.com";
+		}
+	}
+
+
 
 
 	private User savedInstructor() {

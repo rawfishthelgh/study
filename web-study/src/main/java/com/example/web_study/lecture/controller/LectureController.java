@@ -54,5 +54,4 @@ public class LectureController {
 		return ResponseEntity.ok(response);
 	}
 
-
 }

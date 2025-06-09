@@ -12,8 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,9 +19,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "lecture_application", uniqueConstraints = {
-	@UniqueConstraint(columnNames = {"lecture_id", "users_id"})
-})
 @SQLDelete(sql = "UPDATE lecture_application SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class LectureApplication {

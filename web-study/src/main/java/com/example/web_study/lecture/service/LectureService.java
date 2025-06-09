@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.web_study.lecture.entity.Lecture;
 import com.example.web_study.lecture.entity.LectureApplication;
 import com.example.web_study.lecture.repository.LectureApplicationRepository;
+import com.example.web_study.lecture.repository.LecturePaymentRepository;
 import com.example.web_study.lecture.repository.LectureRepository;
 import com.example.web_study.lecture.service.dto.LectureDto;
 import com.example.web_study.lecture.service.dto.LectureSortType;
+import com.example.web_study.lecture.service.dto.TopInstructorDto;
 import com.example.web_study.user.entity.User;
 import com.example.web_study.user.entity.UserType;
 
@@ -27,6 +29,8 @@ public class LectureService {
 
 	private final LectureRepository lectureRepository;
 	private final LectureApplicationRepository lectureApplicationRepository;
+	private final LecturePaymentRepository lecturePaymentRepository;
+
 
 	@Transactional
 	public void createLecture(LectureDto.Create request, User user) {
@@ -101,5 +105,9 @@ public class LectureService {
 
 	public Page<LectureDto.Response> getLectures(String sort, Pageable pageable) {
 		return lectureRepository.findAllBySort(LectureSortType.from(sort), pageable);
+	}
+
+	public List<TopInstructorDto> getTop10RevenueInstructors() {
+		return lecturePaymentRepository.findTop10InstructorsByRevenue();
 	}
 }
