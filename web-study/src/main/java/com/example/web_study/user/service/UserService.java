@@ -13,6 +13,8 @@ import com.example.web_study.user.service.validator.PhoneNumberValidator;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.NoSuchElementException;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -25,12 +27,12 @@ public class UserService {
 
 	public User findById(Long userId) {
 		return userRepository.findById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+			.orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
 	}
 
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email)
-			.orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일입니다."));
+			.orElseThrow(() -> new NoSuchElementException("가입되지 않은 이메일입니다."));
 	}
 
 	@Transactional
@@ -45,7 +47,7 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	private static void validateName(UserCreateDto request) {
+	private void validateName(UserCreateDto request) {
 		if (request.getName() == null || request.getName().isBlank()) {
 			throw new IllegalArgumentException("이름은 비어있을 수 없습니다.");
 		}
@@ -60,7 +62,7 @@ public class UserService {
 		}
 	}
 
-	private static void validatePassword(UserCreateDto request) {
+	private void validatePassword(UserCreateDto request) {
 		if (request.getPassword() == null || request.getPassword().isBlank()) {
 			throw new IllegalArgumentException("비밀번호는 필수입니다.");
 		}
@@ -69,7 +71,7 @@ public class UserService {
 		}
 	}
 
-	private static void validateEmail(UserCreateDto request) {
+	private void validateEmail(UserCreateDto request) {
 		if (request.getEmail() == null || request.getEmail().isBlank()) {
 			throw new IllegalArgumentException("이메일은 필수입니다.");
 		}

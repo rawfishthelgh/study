@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -78,7 +79,7 @@ public class LectureService {
 
 	private void applyLecture(Long lectureId, User user) {
 		Lecture lecture = lectureRepository.findWithPessimisticLockById(lectureId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강의입니다."));
+			.orElseThrow(() -> new NoSuchElementException("존재하지 않는 강의입니다."));
 
 		validateOverMaxStudents(lecture);
 		validateAlreadyApplied(user, lecture);
@@ -115,7 +116,7 @@ public class LectureService {
 		for (LectureDto.PayRequest.PayInfo payInfo : request.getPayInfos()) {
 			Long lectureId = payInfo.getLectureId();
 			Lecture lecture = lectureRepository.findById(lectureId)
-					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강의입니다."));
+					.orElseThrow(() -> new NoSuchElementException("존재하지 않는 강의입니다."));
 			lecturePaymentRepository.save(new LecturePayment(lecture.getId(), user.getId(),payInfo.getAmount(),payInfo.getPaidAt()));
 		}
 	}
