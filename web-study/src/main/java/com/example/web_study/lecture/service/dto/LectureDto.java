@@ -55,4 +55,21 @@ public class LectureDto {
 		private int maxStudent;
 	}
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PayRequest {
+
+        private List<PayInfo> payInfos;
+
+        @Getter
+        @NoArgsConstructor
+        public static class PayInfo {
+            private Long lectureId;
+            private BigDecimal amount;
+            private LocalDateTime paidAt;
+        }
+
+    }
+
 }

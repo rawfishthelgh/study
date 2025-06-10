@@ -110,4 +110,14 @@ public class LectureService {
 	public List<TopInstructorDto> getTop10RevenueInstructors() {
 		return lecturePaymentRepository.findTop10InstructorsByRevenue();
 	}
+
+	@Transactional
+	public void payLecture(User user, LectureDto.PayRequest request) {
+		for (LectureDto.PayRequest.PayInfo payInfo : request.getPayInfos()) {
+			Long lectureId = payInfo.getLectureId();
+			Lecture lecture = lectureRepository.findById(lectureId)
+					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 강의입니다."));
+			lecturePaymentRepository.save(new LecturePayment(lecture.getId(), user.getId(),payInfo.getAmount(),payInfo.getPaidAt()));
+		}
+	}
 }

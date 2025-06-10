@@ -54,4 +54,19 @@ public class LectureController {
 		return ResponseEntity.ok(response);
 	}
 
+    @Operation(summary = "결제 정보 저장", description = "결제 정보를 저장합니다.")
+    @PostMapping("/payments")
+    public ResponseEntity<Void> payLecture(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "결제 정보 저장 요청",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = LectureDto.PayRequest.class))
+            )
+            @RequestBody @Valid LectureDto.PayRequest request,
+            @Parameter(hidden = true) @CurrentUser User user
+    ) {
+        lectureService.payLecture(user, request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
 }
