@@ -1,4 +1,6 @@
 # study
+## API TEST
+👉 [Swagger 테스트 바로가기](http://localhost:8080/swagger-ui/index.html)
 
 ## 회원 가입 API
 
