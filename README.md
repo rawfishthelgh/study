@@ -6,6 +6,10 @@
 3. 가입한 이메일과 비밀번호로 로그인(/api/auth/login)을 진행합니다
 4. 응답받은 accessToken 값에서 Bearer 부분을 제외하고, Swagger 페이지 우측 상단의 "Authorize"를 클릭해 입력합니다.
 5. Example value 가이드에 따라 테스트를 진행합니다
+
++) 강의 목록 조회시 정렬 쿼리 파라미터는 recent(최근등록순), popular(신청자많은순), rate(신청률높은순) 입니다
+
++) 결제 정보 저장 API(/api/lectures/payments)는 추가 기능 구현이 아닌 TOP10 수익 강사 조회 API 데이터를 저장하기 위한 임시 API입니다
 ## 회원 가입 API
 
 - [x] 이메일 형식에 대한 검증  
