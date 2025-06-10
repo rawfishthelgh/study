@@ -31,7 +31,7 @@ dependencies {
 	implementation("org.springframework.security:spring-security-crypto")
 	implementation("org.bouncycastle:bcprov-jdk15to18:1.70")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 	implementation ("com.querydsl:querydsl-jpa:5.0.0:jakarta")
