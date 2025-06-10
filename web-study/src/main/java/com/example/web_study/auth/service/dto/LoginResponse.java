@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LoginResponse {
 
-	private String LoginResponse;
+	private String accessToken;
 }
