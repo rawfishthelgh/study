@@ -71,7 +71,7 @@ public class UserService {
 			throw new IllegalArgumentException("비밀번호는 필수입니다.");
 		}
 		if (!PasswordValidator.isValid(request.getPassword())){
-			throw new IllegalArgumentException("비밀번호가 유효하지 않습니다.");
+			throw new IllegalArgumentException("비밀번호가 유효하지 않습니다.(길이 6~10자 이내, 영어 대문자, 소문자, 숫자 중 최소 두 가지 이상 조합 필요)");
 		}
 	}
 
