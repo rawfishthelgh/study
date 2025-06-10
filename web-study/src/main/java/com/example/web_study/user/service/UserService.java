@@ -60,6 +60,10 @@ public class UserService {
 		if (!phoneNumberValidator.isValid(request.getPhoneNumber())) {
 			throw new IllegalArgumentException("유효하지 않은 휴대폰 번호입니다.");
 		}
+		if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+			throw new IllegalStateException("이미 등록된 전화번호입니다.");
+		}
+
 	}
 
 	private void validatePassword(UserCreateDto request) {
@@ -77,6 +81,9 @@ public class UserService {
 		}
 		if (!EmailValidator.isValid(request.getEmail())) {
 			throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다.");
+		}
+		if (userRepository.existsByEmail(request.getEmail())) {
+			throw new IllegalStateException("이미 등록된 이메일입니다");
 		}
 	}
 
