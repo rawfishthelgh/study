@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.web_study.user.entity.User;
 import com.example.web_study.user.fixture.UserCreateFixture;
 import com.example.web_study.user.repository.UserRepository;
-import com.example.web_study.user.service.dto.UserDto;
+import com.example.web_study.user.service.dto.UserCreateDto;
 
 @SpringBootTest
 @Transactional
@@ -27,7 +27,7 @@ class UserServiceTest {
 	@Test
 	void 회원가입_성공() {
 		// given
-		UserDto.Create request = UserCreateFixture.valid();
+		UserCreateDto request = UserCreateFixture.valid();
 
 		// when
 		userService.register(request);
@@ -43,7 +43,7 @@ class UserServiceTest {
 
 	@Test
 	void 이름_null이면_예외() {
-		UserDto.Create request = UserCreateFixture.with(
+		UserCreateDto request = UserCreateFixture.with(
 			null,
 			"hong@example.com",
 			"01012345678",
@@ -57,7 +57,7 @@ class UserServiceTest {
 
 	@Test
 	void 이메일_형식이_잘못되면_예외() {
-		UserDto.Create request = UserCreateFixture.with(
+		UserCreateDto request = UserCreateFixture.with(
 			"홍길동",
 			"invalid-email",
 			"01012345678",
@@ -72,7 +72,7 @@ class UserServiceTest {
 
 	@Test
 	void 비밀번호_형식이_잘못되면_예외() {
-		UserDto.Create request = UserCreateFixture.with(
+		UserCreateDto request = UserCreateFixture.with(
 			"홍길동",
 			"hong@example.com",
 			"01012345678",
@@ -87,7 +87,7 @@ class UserServiceTest {
 
 	@Test
 	void 휴대폰번호_형식이_잘못되면_예외() {
-		UserDto.Create request = UserCreateFixture.with(
+		UserCreateDto request = UserCreateFixture.with(
 			"홍길동",
 			"hong@example.com",
 			"1234",
@@ -102,7 +102,7 @@ class UserServiceTest {
 
 	@Test
 	void 존재하지_않는_회원유형이면_예외() {
-		UserDto.Create request = UserCreateFixture.with(
+		UserCreateDto request = UserCreateFixture.with(
 			"홍길동",
 			"hong@example.com",
 			"01012345678",

@@ -1,6 +1,7 @@
 package com.example.web_study.lecture.service.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.web_study.lecture.entity.Lecture;
@@ -15,45 +16,45 @@ import lombok.NoArgsConstructor;
 
 public class LectureDto {
 
-	@Getter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Create {
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Create {
 
-		@NotBlank
-		private String title;
+        @NotBlank
+        private String title;
 
-		@Min(1)
-		private int maxStudent;
+        @Min(1)
+        private int maxStudent;
 
-		@Positive
-		private int price;
+        @Positive
+        private int price;
 
-		public Lecture toEntity(User user) {
-			return new Lecture(title, maxStudent, BigDecimal.valueOf(price), user.getId());
-		}
+        public Lecture toEntity(User user) {
+            return new Lecture(title, maxStudent, BigDecimal.valueOf(price), user.getId());
+        }
 
-	}
+    }
 
-	@Getter
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class ApplyRequest {
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ApplyRequest {
 
-		private List<Long> lectureIds;
+        private List<Long> lectureIds;
 
-	}
+    }
 
-	@Getter
-	@AllArgsConstructor
-	public static class Response {
-		private Long id;
-		private String title;
-		private BigDecimal price;
-		private String instructorName;
-		private int applicantCount;
-		private int maxStudent;
-	}
+    @Getter
+    @AllArgsConstructor
+    public static class Response {
+        private Long id;
+        private String title;
+        private BigDecimal price;
+        private String instructorName;
+        private int applicantCount;
+        private int maxStudent;
+    }
 
     @Getter
     @NoArgsConstructor

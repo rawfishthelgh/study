@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.web_study.user.entity.User;
 import com.example.web_study.user.repository.UserRepository;
-import com.example.web_study.user.service.dto.UserDto;
+import com.example.web_study.user.service.dto.UserCreateDto;
 import com.example.web_study.user.service.validator.EmailValidator;
 import com.example.web_study.user.service.validator.PasswordValidator;
 import com.example.web_study.user.service.validator.PhoneNumberValidator;
@@ -34,7 +34,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void register(UserDto.Create request) {
+	public void register(UserCreateDto request) {
 		validateName(request);
 		validatePassword(request);
 		validatePhoneNumber(request);
@@ -45,13 +45,13 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	private static void validateName(UserDto.Create request) {
+	private static void validateName(UserCreateDto request) {
 		if (request.getName() == null || request.getName().isBlank()) {
 			throw new IllegalArgumentException("이름은 비어있을 수 없습니다.");
 		}
 	}
 
-	private void validatePhoneNumber(UserDto.Create request) {
+	private void validatePhoneNumber(UserCreateDto request) {
 		if (request.getPhoneNumber() == null || request.getPhoneNumber().isBlank()) {
 			throw new IllegalArgumentException("휴대폰 번호는 필수입니다.");
 		}
@@ -60,7 +60,7 @@ public class UserService {
 		}
 	}
 
-	private static void validatePassword(UserDto.Create request) {
+	private static void validatePassword(UserCreateDto request) {
 		if (request.getPassword() == null || request.getPassword().isBlank()) {
 			throw new IllegalArgumentException("비밀번호는 필수입니다.");
 		}
@@ -69,7 +69,7 @@ public class UserService {
 		}
 	}
 
-	private static void validateEmail(UserDto.Create request) {
+	private static void validateEmail(UserCreateDto request) {
 		if (request.getEmail() == null || request.getEmail().isBlank()) {
 			throw new IllegalArgumentException("이메일은 필수입니다.");
 		}

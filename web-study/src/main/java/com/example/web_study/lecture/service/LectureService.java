@@ -1,14 +1,8 @@
 package com.example.web_study.lecture.service;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.web_study.lecture.entity.Lecture;
 import com.example.web_study.lecture.entity.LectureApplication;
+import com.example.web_study.lecture.entity.LecturePayment;
 import com.example.web_study.lecture.repository.LectureApplicationRepository;
 import com.example.web_study.lecture.repository.LecturePaymentRepository;
 import com.example.web_study.lecture.repository.LectureRepository;
@@ -17,9 +11,14 @@ import com.example.web_study.lecture.service.dto.LectureSortType;
 import com.example.web_study.lecture.service.dto.TopInstructorDto;
 import com.example.web_study.user.entity.User;
 import com.example.web_study.user.entity.UserType;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
