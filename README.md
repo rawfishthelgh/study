@@ -1,7 +1,11 @@
 # study
-## API TEST
+## API TEST 하는법
 👉 [Swagger 테스트 바로가기](http://localhost:8080/swagger-ui/index.html)
-
+1. 애플리케이션 실행 후 swagger 링크에 접속합니다
+2. 회원가입(/api/users)을 진행합니다
+3. 가입한 이메일과 비밀번호로 로그인(/api/auth/login)을 진행합니다
+4. 응답받은 accessToken 값에서 Bearer 부분을 제외하고, Swagger 페이지 우측 상단의 "Authorize"를 클릭해 입력합니다.
+5. Example value 가이드에 따라 테스트를 진행합니다
 ## 회원 가입 API
 
 - [x] 이메일 형식에 대한 검증  
