@@ -1,4 +1,6 @@
 # study
+## 과제전형 트러블슈팅 및 과정 정리
+👉 [고민과 열정의 흔적 보러가기](https://leegeonhoe.notion.site/20dab019694c80dd9817da2deeb2edc7?source=copy_link)
 ## API TEST 하는법
 👉 [Swagger 테스트 바로가기](http://localhost:8080/swagger-ui/index.html)
 1. 애플리케이션 실행 후 swagger 링크에 접속합니다
